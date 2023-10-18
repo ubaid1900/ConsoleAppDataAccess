@@ -1,9 +1,46 @@
-﻿using System.Data.SqlClient;
+﻿using System.Collections.Generic;
+using System.Data.SqlClient;
 
 namespace ConsoleAppDataAccess
 {
     public class Person
     {
+        public static int AddPerson(Person person)
+        {
+            using (SqlConnection sqlConnection = new SqlConnection(@"Server =.\SQLExpress; Integrated Security=true; Database=TESTING1;"))
+            {
+
+                sqlConnection.Open();
+
+                //string strCommand = "Insert into Person values ('"
+                //    + person.Firstname + "', '"
+                //    + person.Lastname + "', '"
+                //    + person.Middlename + "', '"
+                //    + person.PhoneNumber + "', '"
+                //    + person.DateofBirth + "')";
+
+                //string strCommand_format = string.Format("Insert into Person values ('{0}', '{1}', '{2}', '{3}', '{4}')"
+                //    ,person.Firstname
+                //    ,person.Lastname
+                //    ,person.Middlename
+                //    ,person.PhoneNumber
+                //    ,person.DateofBirth);
+
+                string strCommand_interpolation = 
+                    $"Insert into Person values ('{person.Firstname}', '{person.Lastname}', '{person.Middlename}', '{person.PhoneNumber}', '{person.DateofBirth}')";               
+
+                SqlCommand sqlCommand = new SqlCommand(strCommand_interpolation, sqlConnection);
+
+
+
+                Console.WriteLine("ExecuteNonQuery");
+                int s = sqlCommand.ExecuteNonQuery();
+
+                sqlConnection.Close();
+                //sqlConnection.Dispose();
+                return s;
+            }
+        }
         public static List<Person> GetPersons()
         {
             //SqlConnection sqlConnection = new SqlConnection(@"Server =.\SQLExpress; Integrated Security=true; Database=TESTING1;");
@@ -50,6 +87,9 @@ namespace ConsoleAppDataAccess
         public int Id { get; set; }
         public string Firstname { get; set; }
         public string Lastname { get; set; }
+        public string Middlename { get; set; }
+        public string PhoneNumber { get; set; }
+        public DateTime DateofBirth { get; set; }
     }
 
 }

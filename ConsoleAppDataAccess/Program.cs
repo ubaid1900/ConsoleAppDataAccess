@@ -6,8 +6,11 @@ namespace ConsoleAppDataAccess
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello, World!");
+            Console.WriteLine("Hello, World! {0}");
             Person.GetPersons();
+
+            Person newPerson = new Person();
+            newPerson.DateofBirth = DateTime.Now.AddYears(-20);
 
         }
     }
