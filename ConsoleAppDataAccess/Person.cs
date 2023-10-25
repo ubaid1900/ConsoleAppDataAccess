@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Data.SqlTypes;
 
 namespace ConsoleAppDataAccess
 {
@@ -9,7 +10,7 @@ namespace ConsoleAppDataAccess
         {
             using (SqlConnection sqlConnection = new SqlConnection(@"Server =.\SQLExpress; Integrated Security=true; Database=TESTING1;"))
             {
-
+                
                 sqlConnection.Open();
 
                 //string strCommand = "Insert into Person values ('"
@@ -27,10 +28,10 @@ namespace ConsoleAppDataAccess
                 //    ,person.DateofBirth);
 
                 string strCommand_interpolation = 
-                    $"Insert into Person values ('{person.Firstname}', '{person.Lastname}', '{person.Middlename}', '{person.PhoneNumber}', '{person.DateofBirth}')";               
+                    $"Insert into Person values ('{person.Firstname}', '{person.Lastname}', '{person.Middlename}', '{person.DateofBirth}', '{person.PhoneNumber}')";               
 
                 SqlCommand sqlCommand = new SqlCommand(strCommand_interpolation, sqlConnection);
-
+                
 
 
                 Console.WriteLine("ExecuteNonQuery");
@@ -68,7 +69,7 @@ namespace ConsoleAppDataAccess
                     p.Lastname = reader.GetString(2);
                     list.Add(p);
 
-                    Console.WriteLine("{0} {1}", reader.GetString(0), reader.GetString(1));
+                    Console.WriteLine("{0} {1}", reader.GetInt32(0), reader.GetString(1), reader.GetString(2));
 
                 }
 
@@ -88,7 +89,7 @@ namespace ConsoleAppDataAccess
         public string Firstname { get; set; }
         public string Lastname { get; set; }
         public string Middlename { get; set; }
-        public string PhoneNumber { get; set; }
+        public int PhoneNumber { get; set; }
         public DateTime DateofBirth { get; set; }
     }
 
