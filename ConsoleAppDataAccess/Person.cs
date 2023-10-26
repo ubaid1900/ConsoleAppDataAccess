@@ -85,6 +85,71 @@ namespace ConsoleAppDataAccess
             }
             return list;
         }
+        public static List<Person> GetPersons(string name)
+        {
+            //SqlConnection sqlConnection = new SqlConnection(@"Server =.\SQLExpress; Integrated Security=true; Database=TESTING1;");
+            //using SqlConnection sqlConnection = new SqlConnection(@"Server =.\SQLExpress; Integrated Security=true; Database=TESTING1;");
+
+            List<Person> list = new List<Person>();
+            using (SqlConnection sqlConnection = new SqlConnection(@"Server =.\SQLExpress; Integrated Security=true; Database=TESTING1;"))
+            {
+
+                sqlConnection.Open();
+
+                SqlCommand sqlCommand = new(
+                    $"select Id, Firstname, lastname from Person where firstname like '%{name}%' or lastname like '%{name}%'"
+                    , sqlConnection);
+
+                SqlDataReader reader = sqlCommand.ExecuteReader();
+                while (reader.Read())
+                {
+                    Person p = new Person();
+                    p.Id = reader.GetInt32(0);
+                    p.Firstname = reader.GetString(1);
+                    p.Lastname = reader.GetString(2);
+                    list.Add(p);
+                }
+
+                sqlConnection.Close();
+            }
+
+            Console.WriteLine();
+            Console.WriteLine("From List");
+            foreach (Person p in list)
+            {
+                Console.WriteLine("{0} {1}", p.Firstname, p.Lastname);
+            }
+            return list;
+        }
+
+        public static Person GetPerson(int id)
+        {
+            using (SqlConnection sqlConnection = new SqlConnection(@"Server =.\SQLExpress; Integrated Security=true; Database=TESTING1;"))
+            {
+
+                sqlConnection.Open();
+
+                SqlCommand sqlCommand = new SqlCommand($"select Id, Firstname, lastname from Person where Id = {id}", sqlConnection);
+
+                SqlDataReader reader = sqlCommand.ExecuteReader();
+                if (reader.Read())
+                {
+                    Person p = new Person();
+
+                    p.Id = reader.GetInt32(0);
+                    p.Firstname = reader.GetString(1);
+                    p.Lastname = reader.GetString(2);
+
+                    sqlConnection.Close();
+
+                    return p;
+                }
+
+                sqlConnection.Close();
+            }
+
+            return null;
+        }
         public int Id { get; set; }
         public string Firstname { get; set; }
         public string Lastname { get; set; }
