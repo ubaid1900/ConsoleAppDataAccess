@@ -4,6 +4,7 @@ namespace ConsoleAppDataAccess
 {
     internal class Program
     {
+        // One change for PR
         static void Main(string[] args)
         {
             //Person.GetPersons();
