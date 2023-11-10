@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Data.SqlTypes;
+using System.Runtime.CompilerServices;
+
 
 namespace ConsoleAppDataAccess
 {
@@ -8,13 +10,13 @@ namespace ConsoleAppDataAccess
     {
         public static int AddPerson(Person person)
         {
-            using (SqlConnection sqlConnection = new SqlConnection(@"Server =.\SQLExpress; Integrated Security=true; Database=TESTING1;"))
+            using (SqlConnection sqlConnection = new SqlConnection(@"Server =.\SQLEXPRESS; Integrated Security=true; Database=TESTING1;"))
             {
-                
+
                 sqlConnection.Open();
 
                 //string strCommand = "Insert into Person values ('"
-                //    + person.Firstname + "', '"
+                //    + person.Firstname + "', '"   
                 //    + person.Lastname + "', '"
                 //    + person.Middlename + "', '"
                 //    + person.PhoneNumber + "', '"
@@ -27,11 +29,11 @@ namespace ConsoleAppDataAccess
                 //    ,person.PhoneNumber
                 //    ,person.DateofBirth);
 
-                string strCommand_interpolation = 
-                    $"Insert into Person values ('{person.Firstname}', '{person.Lastname}', '{person.Middlename}', '{person.DateofBirth}', '{person.PhoneNumber}')";               
+                string strCommand_interpolation =
+                    $"Insert into Person values ('{person.Id}','{person.Firstname}', '{person.Lastname}', '{person.Middlename}', '{person.Phonenumber}')";
 
                 SqlCommand sqlCommand = new SqlCommand(strCommand_interpolation, sqlConnection);
-                
+
 
 
                 Console.WriteLine("ExecuteNonQuery");
@@ -48,12 +50,12 @@ namespace ConsoleAppDataAccess
             //using SqlConnection sqlConnection = new SqlConnection(@"Server =.\SQLExpress; Integrated Security=true; Database=TESTING1;");
 
             List<Person> list = new List<Person>();
-            using (SqlConnection sqlConnection = new SqlConnection(@"Server =.\SQLExpress; Integrated Security=true; Database=TESTING1;"))
+            using (SqlConnection sqlConnection = new SqlConnection(@"Server =.\SQLEXPRESS; Integrated Security=true; Database=TESTING1;"))
             {
 
                 sqlConnection.Open();
 
-                SqlCommand sqlCommand = new SqlCommand("select Id, Firstname, lastname from Person", sqlConnection);
+                SqlCommand sqlCommand = new SqlCommand("select Id, Firstname,Middlename, lastname,Phonenumber from Person", sqlConnection);
 
                 Console.WriteLine("ExecuteScalar");
                 object s = sqlCommand.ExecuteScalar();
@@ -69,10 +71,11 @@ namespace ConsoleAppDataAccess
                     p.Lastname = reader.GetString(2);
                     list.Add(p);
 
-                    Console.WriteLine("{0} {1}", reader.GetInt32(0), reader.GetString(1), reader.GetString(2));
+                    Console.WriteLine("{0} {1} {2} {3} {4}", reader.GetInt32(0), reader.GetString(1), reader.GetString(2), reader.GetString(3), reader.GetInt32(4));
+
 
                 }
-
+                return list;
                 sqlConnection.Close();
                 //sqlConnection.Dispose();
             }
@@ -91,13 +94,13 @@ namespace ConsoleAppDataAccess
             //using SqlConnection sqlConnection = new SqlConnection(@"Server =.\SQLExpress; Integrated Security=true; Database=TESTING1;");
 
             List<Person> list = new List<Person>();
-            using (SqlConnection sqlConnection = new SqlConnection(@"Server =.\SQLExpress; Integrated Security=true; Database=TESTING1;"))
+            using (SqlConnection sqlConnection = new SqlConnection(@"Server =.\SQLEXPRESS; Integrated Security=true; Database=TESTING1;"))
             {
 
                 sqlConnection.Open();
 
                 SqlCommand sqlCommand = new(
-                    $"select Id, Firstname, lastname from Person where firstname like '%{name}%' or lastname like '%{name}%'"
+                    $"select Id, Firstname,Middlename, lastname,Phonenumber from Person where firstname like '%{name}%' or lastname like '%{name}%'"
                     , sqlConnection);
 
                 SqlDataReader reader = sqlCommand.ExecuteReader();
@@ -117,45 +120,74 @@ namespace ConsoleAppDataAccess
             Console.WriteLine("From List");
             foreach (Person p in list)
             {
-                Console.WriteLine("{0} {1}", p.Firstname, p.Lastname);
+                Console.WriteLine("{0} {1} {2} {3} {4}", p.Id, p.Firstname, p.Middlename, p.Lastname, p.Phonenumber);
             }
             return list;
         }
 
         public static Person GetPerson(int id)
         {
-            using (SqlConnection sqlConnection = new SqlConnection(@"Server =.\SQLExpress; Integrated Security=true; Database=TESTING1;"))
+            using (SqlConnection sqlConnection = new SqlConnection(@"Server =.\SQLEXPRESS; Integrated Security=true; Database=TESTING1;"))
             {
 
                 sqlConnection.Open();
 
-                SqlCommand sqlCommand = new SqlCommand($"select Id, Firstname, lastname from Person where Id = {id}", sqlConnection);
+                SqlCommand sqlCommand = new SqlCommand($"select Id, Firstname, Middlename, lastname, Phonenumber from Person where Id ={id}", sqlConnection);
 
                 SqlDataReader reader = sqlCommand.ExecuteReader();
+
+
+
+
                 if (reader.Read())
                 {
                     Person p = new Person();
 
                     p.Id = reader.GetInt32(0);
                     p.Firstname = reader.GetString(1);
-                    p.Lastname = reader.GetString(2);
+                    p.Middlename = reader.GetString(2);
+                    p.Lastname = reader.GetString(3);
+                    p.Phonenumber = reader.GetInt32(4);
+
+                    Console.WriteLine("{0} {1} {2} {3} {4} ", reader.GetInt32(0), reader.GetString(1), reader.GetString(2), reader.GetString(3), reader.GetInt32(4));
 
                     sqlConnection.Close();
 
                     return p;
                 }
-
                 sqlConnection.Close();
             }
 
             return null;
         }
+
+        public static int Delete(int id)
+        {
+            using SqlConnection sqlConnection = new SqlConnection(@"Server=.\SQLEXPRESS; INTEGRATED SECURITY= TRUE; DATABASE= TESTING1");
+            {
+                sqlConnection.Open();
+                SqlCommand sqlCommand = new SqlCommand($"Delete from person where Id={id}", sqlConnection);
+                int s = sqlCommand.ExecuteNonQuery();
+
+                if (s > 0)
+                {
+                    Console.WriteLine("One person deleted");
+
+                }
+                else
+                {
+                    Console.WriteLine("person not deleted");
+                }
+                sqlConnection.Close();
+                return s;
+            }
+        }
         public int Id { get; set; }
         public string Firstname { get; set; }
         public string Lastname { get; set; }
         public string Middlename { get; set; }
-        public int PhoneNumber { get; set; }
-        public DateTime DateofBirth { get; set; }
+        public int Phonenumber { get; set; }
+        //  public DateTime DateofBirth { get; set; }
     }
 
 }
