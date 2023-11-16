@@ -1,7 +1,4 @@
 ﻿using System.Data.SqlClient;
-using System.Collections.Generic;
-using System.Data.SqlTypes;
-using ConsoleAppDataAccess;
 
 
 namespace ConsoleAppEmpDataAccess
@@ -9,7 +6,7 @@ namespace ConsoleAppEmpDataAccess
 
     public class Employee
     {
-        public static List<Employee> GetEmployee()
+        public static List<Employee> GetEmployees()
         {
             List<Employee> list = new List<Employee>();
             using SqlConnection sqlConnection = new SqlConnection(@"Server=.\SQLEXPRESS; INTEGRATED SECURITY= TRUE; DATABASE=Employeedb");
@@ -22,7 +19,7 @@ namespace ConsoleAppEmpDataAccess
 
             SqlDataReader reader = sqlCommand.ExecuteReader();
 
-
+            Console.WriteLine("Execute reader");
             while (reader.Read())
             {
                 Employee Emp = new Employee();
@@ -33,7 +30,7 @@ namespace ConsoleAppEmpDataAccess
                 Emp.Phonenumber = reader.GetInt32(4);
                 list.Add(Emp);
 
-                Console.WriteLine(@"{0}{1}{2}{3}{4}", reader.GetInt32(0), reader.GetString(1), reader.GetString(2), reader.GetString(3), reader.GetInt32(4));
+                Console.WriteLine(@"{0} {1} {2} {3} {4}", reader.GetInt32(0), reader.GetString(1), reader.GetString(2), reader.GetString(3), reader.GetInt32(4));
             }
             return list;
 
@@ -44,66 +41,90 @@ namespace ConsoleAppEmpDataAccess
         {
             using SqlConnection sqlConnection = new SqlConnection(@"Server=.\SQLEXPRESS; INTEGRATED SECURITY = TRUE; DATABASE=Employeedb");
             {
-            sqlConnection.Open();
-            
-            SqlCommand sqlCommand = new SqlCommand($"Select Id,Firstname,Middlename,Lastname,phonenumber from Employee where Id={id}",sqlConnection);
+                sqlConnection.Open();
 
-            SqlDataReader reader = sqlCommand.ExecuteReader();
+                SqlCommand sqlCommand = new SqlCommand($"Select Id,Firstname,Middlename,Lastname,phonenumber from Employee where Id={id}", sqlConnection);
 
-            if (reader.Read())
-            {
+                SqlDataReader reader = sqlCommand.ExecuteReader();
 
-                Employee emp = new Employee();
+                if (reader.Read())
+                {
+
+                    Employee emp = new Employee();
                     Console.WriteLine("iam in if function");
-                emp.Id = reader.GetInt32(0);
-                emp.Firstname = reader.GetString(1);
-                emp.Middlename = reader.GetString(2);
-                emp.Lastname = reader.GetString(3);
-                emp.Phonenumber = reader.GetInt32(4);
-                // list.Add(emp);
+                    emp.Id = reader.GetInt32(0);
+                    emp.Firstname = reader.GetString(1);
+                    emp.Middlename = reader.GetString(2);
+                    emp.Lastname = reader.GetString(3);
+                    emp.Phonenumber = reader.GetInt32(4);
+                    // list.Add(emp);
+
+                    sqlConnection.Close();
+                    return emp;
+                }
 
                 sqlConnection.Close();
-                return emp;
-            }
-
-            sqlConnection.Close();
-            return null;
-           // Console.WriteLine("{0}{1}{2}{3}{4}", reader.GetInt32(0), reader.GetString(1), reader.GetString(2), reader.GetString(3), reader.GetString(4));
+                return null;
+                // Console.WriteLine("{0}{1}{2}{3}{4}", reader.GetInt32(0), reader.GetString(1), reader.GetString(2), reader.GetString(3), reader.GetString(4));
 
             }
 
 
         }
-
-        public static  AddPerson()
+        public static int AddEmployee(Employee employee)
         {
 
             using SqlConnection sqlConnection = new SqlConnection(@"Server=.\SQLEXPRESS; INTEGRATED SECURITY= TRUE; DATABASE = Employeedb");
             {
                 sqlConnection.Open();
 
-               string strcommand ="insert into Employee values ('"
-                    + Employee.Id +"','"
-                    + Employee.Firtname +"','" +
-                    + Employee.Middlename +"','"
-                    + Employee.Lastname +"','"
-                    + Employee.Phonenumber + "')";
+                /* string strcommand ="insert into Employee values ('"
+                      + employee.Id +"','"
+                      + employee.Firstname +"','" 
+                      + employee.Middlename +"','"
+                      + employee.Lastname +"','"
+                      + employee.Phonenumber + "')";
 
-                SqlCommand sqlCommand = new SqlCommand(strcommand, sqlConnection);
-                Console.WriteLine("Execute Nonqurey");
+                  SqlCommand sqlCommand = new SqlCommand(strcommand, sqlConnection);
+                string strcommand_format = string.Format("insert into Employee values('{0}','{1}','{2}','{3}','{4}')", employee.Id, employee.Firstname, employee.Middlename, employee.Lastname, employee.Phonenumber);
+
+                SqlCommand sqlCommand = new SqlCommand(strcommand_format, sqlConnection);*/
+
+                string strcommand_interpolation = $"Insert into Employee values('{employee.Id}','{employee.Firstname}','{employee.Middlename}','{employee.Lastname}','{employee.Phonenumber}')";
+                SqlCommand sqlCommand = new SqlCommand(strcommand_interpolation, sqlConnection);
+                Console.WriteLine("ExecuteNonqurey");
                 int s = sqlCommand.ExecuteNonQuery();
 
                 sqlConnection.Close();
-                //return s;
+                return s;
             }
+
+        }
+        public static int DeleteEmployee(int id)
+        {
+            using SqlConnection sqlConnection = new SqlConnection(@"Server=.\SQLEXPRESS; INTEGRATED SECURITY=TRUE; DATABASE = Employeedb");
+            sqlConnection.Open();
+            SqlCommand sqlCommand = new SqlCommand($"Delete from employee where Id={id}", sqlConnection);
+            int s = sqlCommand.ExecuteNonQuery();
+            if (s > 1)
+            {
+                Console.WriteLine(" one Employee deleted");
+            }
+            else
+            {
+                Console.WriteLine("Employee not deleted");
+            }
+
+            sqlConnection.Close();
+            return s;
         }
 
-    public int Id { get; set; }
-    public string Firstname { get; set; }
-    public string Middlename { get; set; }
-    public string Lastname { get; set; }
-    public int Phonenumber { get; set; }
-}
+        public int Id { get; set; }
+        public string Firstname { get; set; }
+        public string Middlename { get; set; }
+        public string Lastname { get; set; }
+        public int Phonenumber { get; set; }
+    }
 
 }
 

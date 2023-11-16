@@ -161,7 +161,7 @@ namespace ConsoleAppDataAccess
             return null;
         }
 
-        public static int Delete(int id)
+        public static int DeletePerson(int id)
         {
             using SqlConnection sqlConnection = new SqlConnection(@"Server=.\SQLEXPRESS; INTEGRATED SECURITY= TRUE; DATABASE= TESTING1");
             {
@@ -180,6 +180,71 @@ namespace ConsoleAppDataAccess
                 }
                 sqlConnection.Close();
                 return s;
+            }
+        }
+
+        public static int UpdatePerson(Person person, int id, bool T)
+        {
+            using (SqlConnection sqlConnection = new SqlConnection(@"SERVER=.\SQLEXPRESS; INTEGRATED SECURITY= TRUE; DATABASE= TESTING1"))
+            {
+
+                sqlConnection.Open();
+                int s =1;
+                string command = "Update Person SET";
+                if (T)
+                {
+                    if (!String.IsNullOrWhiteSpace(person.Firstname))
+                    {
+                        string sqlCommand1 = command + $" Firstname=('{person.Firstname}') Where Id={id}";
+                        SqlCommand sqlCommand2 = new SqlCommand(sqlCommand1, sqlConnection);
+                        int s1 = sqlCommand2.ExecuteNonQuery();
+                        //Console.WriteLine(s1);
+                        //return s1;
+                    }
+
+                    if (!String.IsNullOrWhiteSpace(person.Middlename))
+                    {
+                        string sqlCommand1 = command + $" Middlename=('{person.Middlename}') Where Id={id}";
+                        SqlCommand sqlCommand2 = new SqlCommand(sqlCommand1, sqlConnection);
+                       int s2 = sqlCommand2.ExecuteNonQuery();
+                       // Console.WriteLine(s2);
+                        //return s2;
+                    }
+
+                    if (!String.IsNullOrWhiteSpace(person.Lastname))
+                    {
+                        string sqlCommand1 = command + $" Lastname=('{person.Lastname}') Where Id= {id}";
+                        SqlCommand sqlCommand2 = new SqlCommand(sqlCommand1, sqlConnection);
+                       int s3 = sqlCommand2.ExecuteNonQuery();
+                       // Console.WriteLine(s3);
+                       // return s3;
+                    }
+                    if (int.IsPositive(person.Phonenumber))
+                    {
+                        string sqlCommand1 = command + $" Phonenumber=('{person.Phonenumber}') Where Id={id}";
+                        SqlCommand sqlCommand2 = new SqlCommand(sqlCommand1, sqlConnection);
+                        int s3 = sqlCommand2.ExecuteNonQuery();
+                       // Console.WriteLine(s3);
+                        // return s3;
+                    }
+
+
+
+                }
+                else
+                {
+                    string sqlCommand_interpolation = $"Update Person SET Firstname='{person.Firstname}', Middlename='{person.Middlename}', Lastname='{person.Lastname}', Phonenumber='{person.Phonenumber}' Where Id={id}";
+                    SqlCommand sqlCommand = new SqlCommand(sqlCommand_interpolation, sqlConnection);
+                    int s1 = sqlCommand.ExecuteNonQuery();
+                    Console.WriteLine(s);
+                    return s1;
+
+                }
+                return s;
+
+
+                sqlConnection.Close();
+
             }
         }
         public int Id { get; set; }
