@@ -38,8 +38,8 @@ namespace ConsoleAppDataAccess
             newperson.Id =2;
             newperson.Firstname = "salman";
             newperson.Middlename = "mohd";
-            newperson.Lastname = "khan";
-            newperson.Phonenumber = 111;
+            //newperson.Lastname = "khan";
+            //newperson.Phonenumber = 111;
 
             int addResult = Person.UpdatePerson(newperson, newperson.Id, true);
             if (addResult==1)

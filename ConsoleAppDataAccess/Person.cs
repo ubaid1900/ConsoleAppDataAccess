@@ -183,75 +183,52 @@ namespace ConsoleAppDataAccess
             }
         }
 
-        public static int UpdatePerson(Person person, int id, bool T)
+        public static int UpdatePerson(Person person, int id, bool partialUpdate)
         {
             using (SqlConnection sqlConnection = new SqlConnection(@"SERVER=.\SQLEXPRESS; INTEGRATED SECURITY= TRUE; DATABASE= TESTING1"))
             {
-
                 sqlConnection.Open();
-                int s =1;
-                string command = "Update Person SET";
-                if (T)
+                int s = 1;
+                List<string> commandParts = new();
+                string command = "Update Person SET ";
+                if (partialUpdate)
                 {
                     if (!String.IsNullOrWhiteSpace(person.Firstname))
                     {
-                        string sqlCommand1 = command + $" Firstname=('{person.Firstname}') Where Id={id}";
-                        SqlCommand sqlCommand2 = new SqlCommand(sqlCommand1, sqlConnection);
-                        int s1 = sqlCommand2.ExecuteNonQuery();
-                        //Console.WriteLine(s1);
-                        //return s1;
+                        commandParts.Add($"Firstname = '{person.Firstname}'");
                     }
 
                     if (!String.IsNullOrWhiteSpace(person.Middlename))
                     {
-                        string sqlCommand1 = command + $" Middlename=('{person.Middlename}') Where Id={id}";
-                        SqlCommand sqlCommand2 = new SqlCommand(sqlCommand1, sqlConnection);
-                       int s2 = sqlCommand2.ExecuteNonQuery();
-                       // Console.WriteLine(s2);
-                        //return s2;
+                        commandParts.Add($"Middlename = '{person.Middlename}'");
                     }
 
                     if (!String.IsNullOrWhiteSpace(person.Lastname))
                     {
-                        string sqlCommand1 = command + $" Lastname=('{person.Lastname}') Where Id= {id}";
-                        SqlCommand sqlCommand2 = new SqlCommand(sqlCommand1, sqlConnection);
-                       int s3 = sqlCommand2.ExecuteNonQuery();
-                       // Console.WriteLine(s3);
-                       // return s3;
+                        commandParts.Add($"Lastname = '{person.Lastname}'");
                     }
-                    if (int.IsPositive(person.Phonenumber))
+                    if (person.Phonenumber > 0)
                     {
-                        string sqlCommand1 = command + $" Phonenumber=('{person.Phonenumber}') Where Id={id}";
-                        SqlCommand sqlCommand2 = new SqlCommand(sqlCommand1, sqlConnection);
-                        int s3 = sqlCommand2.ExecuteNonQuery();
-                       // Console.WriteLine(s3);
-                        // return s3;
+                        commandParts.Add($"Phonenumber = '{person.Phonenumber}'");
                     }
-
-
-
+                    command += String.Join(", ", commandParts) + $" Where Id={id}";
                 }
                 else
                 {
-                    string sqlCommand_interpolation = $"Update Person SET Firstname='{person.Firstname}', Middlename='{person.Middlename}', Lastname='{person.Lastname}', Phonenumber='{person.Phonenumber}' Where Id={id}";
-                    SqlCommand sqlCommand = new SqlCommand(sqlCommand_interpolation, sqlConnection);
-                    int s1 = sqlCommand.ExecuteNonQuery();
-                    Console.WriteLine(s);
-                    return s1;
-
+                    command = $"Update Person SET Firstname='{person.Firstname}', Middlename='{person.Middlename}', Lastname='{person.Lastname}', Phonenumber='{person.Phonenumber}' Where Id={id}";
                 }
-                return s;
-
-
+                SqlCommand sqlCommand = new SqlCommand(command, sqlConnection);
+                s = sqlCommand.ExecuteNonQuery();
                 sqlConnection.Close();
+                return s;
 
             }
         }
         public int Id { get; set; }
-        public string Firstname { get; set; }
-        public string Lastname { get; set; }
-        public string Middlename { get; set; }
-        public int Phonenumber { get; set; }
+        public string? Firstname { get; set; }
+        public string? Lastname { get; set; }
+        public string? Middlename { get; set; }
+        public int? Phonenumber { get; set; }
         //  public DateTime DateofBirth { get; set; }
     }
 
