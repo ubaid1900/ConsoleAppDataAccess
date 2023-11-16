@@ -88,7 +88,7 @@ namespace ConsoleAppDataAccess
             }
             return list;
         }
-        public static List<Person> GetPersons(string name)
+        public async static Task<List<Person>> GetPersons(string name)
         {
             //SqlConnection sqlConnection = new SqlConnection(@"Server =.\SQLExpress; Integrated Security=true; Database=TESTING1;");
             //using SqlConnection sqlConnection = new SqlConnection(@"Server =.\SQLExpress; Integrated Security=true; Database=TESTING1;");
@@ -97,14 +97,14 @@ namespace ConsoleAppDataAccess
             using (SqlConnection sqlConnection = new SqlConnection(@"Server =.\SQLEXPRESS; Integrated Security=true; Database=TESTING1;"))
             {
 
-                sqlConnection.Open();
+                await sqlConnection.OpenAsync();
 
                 SqlCommand sqlCommand = new(
                     $"select Id, Firstname,Middlename, lastname,Phonenumber from Person where firstname like '%{name}%' or lastname like '%{name}%'"
                     , sqlConnection);
 
-                SqlDataReader reader = sqlCommand.ExecuteReader();
-                while (reader.Read())
+                SqlDataReader reader = await sqlCommand.ExecuteReaderAsync();
+                while (await reader.ReadAsync())
                 {
                     Person p = new Person();
                     p.Id = reader.GetInt32(0);

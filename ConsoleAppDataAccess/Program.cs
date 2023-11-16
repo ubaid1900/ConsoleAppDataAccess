@@ -7,11 +7,15 @@ namespace ConsoleAppDataAccess
     {
         static void Main(string[] args)
         {
+
+            // Another change 
             //Person.GetPersons();
             // Person.GetPersons("n");
+            var persons = Person.GetPersons("n").GetAwaiter().GetResult();
+
             //Person.GetPersons();
             // Person.GetPerson(2);
-           // Employee.GetEmployees();
+            // Employee.GetEmployees();
             //Employee.GetEmployee(1);
             //  Person.Delete(1);
             // Employee.DeleteEmployee(2);
