@@ -183,11 +183,11 @@ namespace ConsoleAppDataAccess
             }
         }
 
-        public static int UpdatePerson(Person person, int id, bool partialUpdate)
+        public static async Task<int> UpdatePerson(Person person, int id, bool partialUpdate)
         {
             using (SqlConnection sqlConnection = new SqlConnection(@"SERVER=.\SQLEXPRESS; INTEGRATED SECURITY= TRUE; DATABASE= TESTING1"))
             {
-                sqlConnection.Open();
+               await sqlConnection.OpenAsync();
                 int s = 1;
                 List<string> commandParts = new();
                 string command = "Update Person SET ";
@@ -215,7 +215,7 @@ namespace ConsoleAppDataAccess
                 }
                 else
                 {
-                    command = $"Update Person SET Firstname='{person.Firstname}', Middlename='{person.Middlename}', Lastname='{person.Lastname}', Phonenumber='{person.Phonenumber}' Where Id={id}";
+                    command = $"Update Person SET Firstname='{person.Firstname}', Middlename='{person.Middlename}', Lastname='{person.Lastname}', Phonenumber='{person.Phonenumber}' Where Id={id}";    
                 }
                 SqlCommand sqlCommand = new SqlCommand(command, sqlConnection);
                 s = sqlCommand.ExecuteNonQuery();
