@@ -1,4 +1,6 @@
-﻿using System.Data.SqlClient;
+﻿using ConsoleAppDataAccess;
+using System.Data.SqlClient;
+using System.Diagnostics;
 
 
 namespace ConsoleAppEmpDataAccess
@@ -117,6 +119,54 @@ namespace ConsoleAppEmpDataAccess
 
             sqlConnection.Close();
             return s;
+        }
+
+        public static async Task< int> UpdateEmployee(int Id ,Employee employee, bool PartialUpdate)
+        {
+
+            SqlConnection sqlConnection = new SqlConnection(@"Server=.\SQLEXPRESS; INTEGRATED SECURITY = TRUE; DATABASE=Employeedb");
+            {
+                await sqlConnection.OpenAsync();
+                List<string> commandparts = new();
+                int s;
+                string command = "Update employee SET ";
+
+                if (PartialUpdate)
+                {
+                    if (!string.IsNullOrWhiteSpace(employee.Firstname))
+                    {
+                        commandparts.Add($"Firstname = '{employee.Firstname}'");
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(employee.Middlename))
+                    {
+                        commandparts.Add($"Middlename = '{employee.Middlename}'");
+
+                    }
+                    if (!string.IsNullOrWhiteSpace(employee.Lastname))
+                    {
+                        commandparts.Add($"Lastname = '{employee.Lastname}'");
+
+                    }
+                    if (employee.Phonenumber>0)
+                    {
+                        commandparts.Add($"Phonenumber = '{employee.Phonenumber}'");
+
+                    }
+
+                    command+= string.Join(", ", commandparts) + $"Where Id= {Id}";
+                }
+
+                else
+                {
+                    command = $"Update Employee SET Firstname = '{employee.Firstname}',Middlename = '{employee.Middlename}',Lastname = '{employee.Lastname}',Phonenumber = '{employee.Phonenumber}' Where Id={Id}"; 
+                }
+
+                SqlCommand sqlCommand = new SqlCommand(command, sqlConnection);
+                s = sqlCommand.ExecuteNonQuery();
+                sqlConnection.Close();
+                return s;
+            }
         }
 
         public int Id { get; set; }
