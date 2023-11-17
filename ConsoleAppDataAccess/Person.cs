@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Data.SqlTypes;
 using System.Runtime.CompilerServices;
@@ -124,6 +125,45 @@ namespace ConsoleAppDataAccess
             }
             return list;
         }
+        public async static Task<List<Person>> GetPersons_WithDataAdapter(string name)
+        {
+            List<Person> list = new List<Person>();
+            using (SqlConnection sqlConnection = new SqlConnection(@"Server =.\SQLEXPRESS; Integrated Security=true; Database=TESTING1;"))
+            {
+                await sqlConnection.OpenAsync();
+
+                string cmdText = $"select Id, Firstname as fn,Middlename, lastname,Phonenumber from Person where firstname = '{name}'";
+
+                SqlDataAdapter sqlDataAdapter = new(cmdText, sqlConnection);
+                DataSet ds = new();
+                sqlDataAdapter.Fill(ds);
+
+                if (ds.Tables.Count > 0)
+                {
+                    DataRowCollection rows = ds.Tables[0].Rows;
+                    foreach (DataRow row in rows)
+                    {
+                        Person p = new();
+                        p.Id = Convert.ToInt32(row["Id"]);
+                        p.Firstname = Convert.ToString(row["fn"]);
+                        p.Middlename = Convert.ToString(row["Middlename"]);
+                        p.Lastname = Convert.ToString(row["lastname"]);
+                        p.Phonenumber = Convert.ToInt32(row["Phonenumber"]);
+                        list.Add(p);
+                    }
+                }
+
+                sqlConnection.Close();
+            }
+
+            Console.WriteLine();
+            Console.WriteLine("From List");
+            foreach (Person p in list)
+            {
+                Console.WriteLine("{0} {1} {2} {3} {4}", p.Id, p.Firstname, p.Middlename, p.Lastname, p.Phonenumber);
+            }
+            return list;
+        }
 
         public static Person GetPerson(int id)
         {
@@ -187,7 +227,7 @@ namespace ConsoleAppDataAccess
         {
             using (SqlConnection sqlConnection = new SqlConnection(@"SERVER=.\SQLEXPRESS; INTEGRATED SECURITY= TRUE; DATABASE= TESTING1"))
             {
-               await sqlConnection.OpenAsync();
+                await sqlConnection.OpenAsync();
                 int s = 1;
                 List<string> commandParts = new();
                 string command = "Update Person SET ";
@@ -215,7 +255,7 @@ namespace ConsoleAppDataAccess
                 }
                 else
                 {
-                    command = $"Update Person SET Firstname='{person.Firstname}', Middlename='{person.Middlename}', Lastname='{person.Lastname}', Phonenumber='{person.Phonenumber}' Where Id={id}";    
+                    command = $"Update Person SET Firstname='{person.Firstname}', Middlename='{person.Middlename}', Lastname='{person.Lastname}', Phonenumber='{person.Phonenumber}' Where Id={id}";
                 }
                 SqlCommand sqlCommand = new SqlCommand(command, sqlConnection);
                 s = sqlCommand.ExecuteNonQuery();

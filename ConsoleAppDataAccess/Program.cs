@@ -12,6 +12,7 @@ namespace ConsoleAppDataAccess
             //Person.GetPersons();
             // Person.GetPersons("n");
             // var persons = Person.GetPersons("n").GetAwaiter().GetResult();
+            var persons = Person.GetPersons_WithDataAdapter("Hillary").GetAwaiter().GetResult();
 
             //Person.GetPersons();
             // Person.GetPerson(2);
@@ -38,61 +39,61 @@ namespace ConsoleAppDataAccess
             } */
             #endregion
             #region update person
-           /*  Person newperson = new Person();
-             newperson.Id =2;
-             newperson.Firstname = "salman";
-             newperson.Middlename = "mohd";
-             //newperson.Lastname = "khan";
-             //newperson.Phonenumber = 111;
+            /*  Person newperson = new Person();
+              newperson.Id =2;
+              newperson.Firstname = "salman";
+              newperson.Middlename = "mohd";
+              //newperson.Lastname = "khan";
+              //newperson.Phonenumber = 111;
 
-             int addResult = Person.UpdatePerson(newperson, newperson.Id, true).GetAwaiter().GetResult();
-             if (addResult==1)
-             {
-                 Console.WriteLine("Preson updated");
+              int addResult = Person.UpdatePerson(newperson, newperson.Id, true).GetAwaiter().GetResult();
+              if (addResult==1)
+              {
+                  Console.WriteLine("Preson updated");
 
-             }
-             else
-             {
-                 Console.WriteLine("person not updated");
-             }*/
+              }
+              else
+              {
+                  Console.WriteLine("person not updated");
+              }*/
 
             #endregion
             #region add employee
-             /*Employee employee = new Employee();
-             employee.Id = 10;
-             employee.Firstname = "abdullah";
-             employee.Middlename = "mohd";
-             employee.Lastname = "khan";
-             employee.Phonenumber = 878787;
-
-             int addresult = Employee.AddEmployee(employee);
-             if (addresult == 1)
-             {
-                 Console.WriteLine("new Employee added");
-             }
-             else
-             {
-                 Console.WriteLine("failure of adding new employee");
-             }*/
-            #endregion;
-
-            #region update Employee;
-            Employee employee = new Employee();
-            employee.Id = 9;
-            employee.Firstname = "salman";
-            employee.Middlename = "khan";
+            /*Employee employee = new Employee();
+            employee.Id = 10;
+            employee.Firstname = "abdullah";
+            employee.Middlename = "mohd";
             employee.Lastname = "khan";
             employee.Phonenumber = 878787;
 
-             int addresult = Employee.UpdateEmployee(employee.Id, employee,true).GetAwaiter().GetResult();
+            int addresult = Employee.AddEmployee(employee);
             if (addresult == 1)
             {
-                Console.WriteLine($"Employee Id={ employee.Id} Updated");
+                Console.WriteLine("new Employee added");
             }
             else
             {
-                Console.WriteLine("Failure to Update employee");
-            }
+                Console.WriteLine("failure of adding new employee");
+            }*/
+            #endregion;
+
+            #region update Employee;
+            //Employee employee = new Employee();
+            //employee.Id = 9;
+            //employee.Firstname = "salman";
+            //employee.Middlename = "khan";
+            //employee.Lastname = "khan";
+            //employee.Phonenumber = 878787;
+
+            // int addresult = Employee.UpdateEmployee(employee.Id, employee,true).GetAwaiter().GetResult();
+            //if (addresult == 1)
+            //{
+            //    Console.WriteLine($"Employee Id={ employee.Id} Updated");
+            //}
+            //else
+            //{
+            //    Console.WriteLine("Failure to Update employee");
+            //}
            
             #endregion
 
