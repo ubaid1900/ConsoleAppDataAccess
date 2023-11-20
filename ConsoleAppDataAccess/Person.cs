@@ -9,12 +9,15 @@ namespace ConsoleAppDataAccess
 {
     public class Person
     {
-        public static int AddPerson(Person person)
+        public static int AddPerson_withDataAdapter(Person person)
         {
             using (SqlConnection sqlConnection = new SqlConnection(@"Server =.\SQLEXPRESS; Integrated Security=true; Database=TESTING1;"))
             {
 
                 sqlConnection.Open();
+
+                List<Person> person1 = new();
+                //int s;
 
                 //string strCommand = "Insert into Person values ('"
                 //    + person.Firstname + "', '"   
@@ -33,19 +36,32 @@ namespace ConsoleAppDataAccess
                 string strCommand_interpolation =
                     $"Insert into Person values ('{person.Id}','{person.Firstname}', '{person.Lastname}', '{person.Middlename}', '{person.Phonenumber}')";
 
-                SqlCommand sqlCommand = new SqlCommand(strCommand_interpolation, sqlConnection);
+                SqlDataAdapter sqlDataAdapter = new(strCommand_interpolation, sqlConnection);
 
+                DataSet ds = new();
+                sqlDataAdapter.Fill(ds);
 
-
-                Console.WriteLine("ExecuteNonQuery");
-                int s = sqlCommand.ExecuteNonQuery();
+                if (ds.Tables.Count > 0)
+                {
+                    DataRowCollection rows = ds.Tables[0].Rows;
+                    foreach (DataRow row in rows)
+                    {
+                        Person p = new();
+                        p.Id = Convert.ToInt32(row["Id"]);
+                        p.Firstname = Convert.ToString(row["Firstname"]);
+                        p.Middlename = Convert.ToString(row["Middlename"]);
+                        p.Lastname = Convert.ToString(row["Lastname"]);
+                        p.Phonenumber = Convert.ToInt32(row["Phonenumber"]);
+                        person1.Add(p);
+                    }
+                }
 
                 sqlConnection.Close();
                 //sqlConnection.Dispose();
-                return s;
+                return 1;
             }
         }
-        public static List<Person> GetPersons()
+        public static List<Person> GetPersons_withDataAdapter()
         {
             //SqlConnection sqlConnection = new SqlConnection(@"Server =.\SQLExpress; Integrated Security=true; Database=TESTING1;");
             //using SqlConnection sqlConnection = new SqlConnection(@"Server =.\SQLExpress; Integrated Security=true; Database=TESTING1;");
@@ -56,40 +72,55 @@ namespace ConsoleAppDataAccess
 
                 sqlConnection.Open();
 
-                SqlCommand sqlCommand = new SqlCommand("select Id, Firstname,Middlename, lastname,Phonenumber from Person", sqlConnection);
+                SqlDataAdapter sqlCommand = new("select Id, Firstname,Middlename, lastname,Phonenumber from Person", sqlConnection);
 
-                Console.WriteLine("ExecuteScalar");
-                object s = sqlCommand.ExecuteScalar();
-                Console.WriteLine(s);
+                DataSet ds = new();
 
-                Console.WriteLine("ExecuteReader");
-                SqlDataReader reader = sqlCommand.ExecuteReader();
-                while (reader.Read())
+                sqlCommand.Fill(ds);
+
+                //Console.WriteLine("ExecuteScalar");
+                //object s = sqlCommand.ExecuteScalar();
+                //Console.WriteLine(s);
+
+                // Console.WriteLine("ExecuteReader");
+                //SqlDataReader reader = sqlCommand.ExecuteReader();
+
+                if (ds.Tables.Count > 0)
                 {
-                    Person p = new Person();
-                    p.Id = reader.GetInt32(0);
-                    p.Firstname = reader.GetString(1);
-                    p.Lastname = reader.GetString(2);
-                    list.Add(p);
 
-                    Console.WriteLine("{0} {1} {2} {3} {4}", reader.GetInt32(0), reader.GetString(1), reader.GetString(2), reader.GetString(3), reader.GetInt32(4));
+                    DataRowCollection rows = ds.Tables[0].Rows;
+                    foreach (DataRow row in rows)
+                    {
+                        Person p = new Person();
+                        p.Id = Convert.ToInt32(row["Id"]);
+                        p.Firstname = Convert.ToString(row["Firstname"]);
+                        p.Middlename = Convert.ToString(row["Middlename"]);
+                        p.Lastname = Convert.ToString(row["Lastname"]);
+                        p.Phonenumber = Convert.ToInt32(row["Phonenumber"]);
+                        list.Add(p);
+                       
 
+                        Console.WriteLine("{0} {1} {2} {3} {4}", p.Id, p.Firstname, p.Middlename, p.Lastname, p.Phonenumber);
+                    }
 
                 }
-                return list;
-                sqlConnection.Close();
+                // return list;
                 //sqlConnection.Dispose();
+
+                Console.WriteLine();
+                Console.WriteLine("From List");
+                foreach (Person p in list)
+                {
+                    Console.WriteLine("{0} {1}", p.Firstname, p.Lastname);
+                }
+                return list;
+
+                sqlConnection.Close();
             }
 
-            Console.WriteLine();
-            Console.WriteLine("From List");
-            foreach (Person p in list)
-            {
-                Console.WriteLine("{0} {1}", p.Firstname, p.Lastname);
-            }
-            return list;
+
         }
-        public async static Task<List<Person>> GetPersons(string name)
+        public async static Task<List<Person>> GetPersons_withDataAdapter(string name)
         {
             //SqlConnection sqlConnection = new SqlConnection(@"Server =.\SQLExpress; Integrated Security=true; Database=TESTING1;");
             //using SqlConnection sqlConnection = new SqlConnection(@"Server =.\SQLExpress; Integrated Security=true; Database=TESTING1;");
@@ -100,30 +131,47 @@ namespace ConsoleAppDataAccess
 
                 await sqlConnection.OpenAsync();
 
-                SqlCommand sqlCommand = new(
-                    $"select Id, Firstname,Middlename, lastname,Phonenumber from Person where firstname like '%{name}%' or lastname like '%{name}%'"
+                SqlDataAdapter sqlDataAdapter = new(
+                    $"select Id, Firstname,Middlename, lastname,Phonenumber from Person where Firstname like '%{name}%' or Lastname like '%{name}%'"
                     , sqlConnection);
 
-                SqlDataReader reader = await sqlCommand.ExecuteReaderAsync();
-                while (await reader.ReadAsync())
+                DataSet ds = new();
+                sqlDataAdapter.Fill(ds);
+
+                //SqlDataReader reader = await sqlCommand.ExecuteReaderAsync();
+
+
+                if (ds.Tables.Count > 0)
                 {
-                    Person p = new Person();
-                    p.Id = reader.GetInt32(0);
-                    p.Firstname = reader.GetString(1);
-                    p.Lastname = reader.GetString(2);
-                    list.Add(p);
+
+                    DataRowCollection rows = ds.Tables[0].Rows;
+
+                    foreach (DataRow row in rows)
+                    {
+                        Person p = new Person();
+                        p.Id = Convert.ToInt32(row["Id"]);
+                        p.Firstname = Convert.ToString(row["Firstname"]);
+                        p.Middlename = Convert.ToString(row["Middlename"]);
+                        p.Lastname = Convert.ToString(row["Lastname"]);
+                        p.Phonenumber = Convert.ToInt32(row["Phonenumber"]);
+                        list.Add(p);
+                        Console.WriteLine("{0},{1},{2},{3},{4}", p.Id, p.Firstname, p.Middlename, p.Lastname, p.Phonenumber);
+                    }
                 }
 
+                Console.WriteLine();
+                Console.WriteLine("From List");
+                foreach (Person p in list)
+                {
+                    Console.WriteLine("{0} {1} {2} {3} {4}", p.Id, p.Firstname, p.Middlename, p.Lastname, p.Phonenumber);
+                }
+                return list;
                 sqlConnection.Close();
+
             }
 
-            Console.WriteLine();
-            Console.WriteLine("From List");
-            foreach (Person p in list)
-            {
-                Console.WriteLine("{0} {1} {2} {3} {4}", p.Id, p.Firstname, p.Middlename, p.Lastname, p.Phonenumber);
-            }
-            return list;
+           
+
         }
         public async static Task<List<Person>> GetPersons_WithDataAdapter(string name)
         {
@@ -165,35 +213,43 @@ namespace ConsoleAppDataAccess
             return list;
         }
 
-        public static Person GetPerson(int id)
+        public static Person GetPerson_withDataAdapter(int id)
         {
             using (SqlConnection sqlConnection = new SqlConnection(@"Server =.\SQLEXPRESS; Integrated Security=true; Database=TESTING1;"))
             {
 
                 sqlConnection.Open();
 
-                SqlCommand sqlCommand = new SqlCommand($"select Id, Firstname, Middlename, lastname, Phonenumber from Person where Id ={id}", sqlConnection);
+                SqlDataAdapter sqlDataAdapter = new ($"select Id, Firstname, Middlename, lastname, Phonenumber from Person where Id ={id}", sqlConnection);
 
-                SqlDataReader reader = sqlCommand.ExecuteReader();
+                DataSet ds = new();
+                sqlDataAdapter.Fill(ds);
+
+
+                //SqlDataReader reader = sqlCommand.ExecuteReader();
 
 
 
 
-                if (reader.Read())
+                if (ds.Tables.Count>0)
                 {
-                    Person p = new Person();
+                    DataRowCollection rows = ds.Tables[0].Rows;
+                    foreach (DataRow row in rows)
+                    {
+                        Person p = new Person();
+                        p.Id = Convert.ToInt32(row["Id"]);
+                        p.Firstname = Convert.ToString(row["Firstname"]);
+                        p.Middlename = Convert.ToString(row["Middlename"]);
+                        p.Lastname = Convert.ToString(row["Lastname"]);
+                        p.Phonenumber = Convert.ToInt32(row["Phonenumber"]);
 
-                    p.Id = reader.GetInt32(0);
-                    p.Firstname = reader.GetString(1);
-                    p.Middlename = reader.GetString(2);
-                    p.Lastname = reader.GetString(3);
-                    p.Phonenumber = reader.GetInt32(4);
 
-                    Console.WriteLine("{0} {1} {2} {3} {4} ", reader.GetInt32(0), reader.GetString(1), reader.GetString(2), reader.GetString(3), reader.GetInt32(4));
-
+                        Console.WriteLine("{0} {1} {2} {3} {4} ", p.Id,p.Firstname, p.Middlename, p.Lastname,p.Phonenumber);
+                        return p;
+                    }
                     sqlConnection.Close();
 
-                    return p;
+                    
                 }
                 sqlConnection.Close();
             }
@@ -201,15 +257,17 @@ namespace ConsoleAppDataAccess
             return null;
         }
 
-        public static int DeletePerson(int id)
+        public static int DeletePerson_withDataAdapter(int id)
         {
             using SqlConnection sqlConnection = new SqlConnection(@"Server=.\SQLEXPRESS; INTEGRATED SECURITY= TRUE; DATABASE= TESTING1");
             {
                 sqlConnection.Open();
-                SqlCommand sqlCommand = new SqlCommand($"Delete from person where Id={id}", sqlConnection);
-                int s = sqlCommand.ExecuteNonQuery();
+                SqlDataAdapter sqlDataAdapter = new($"Delete from person where Id={id}", sqlConnection);
+                DataSet ds = new();
 
-                if (s > 0)
+                int s = sqlDataAdapter.Fill(ds);
+
+                if (s>0)
                 {
                     Console.WriteLine("One person deleted");
 
@@ -219,7 +277,7 @@ namespace ConsoleAppDataAccess
                     Console.WriteLine("person not deleted");
                 }
                 sqlConnection.Close();
-                return s;
+                return 1;
             }
         }
 

@@ -9,19 +9,19 @@ namespace ConsoleAppDataAccess
         {
 
             // Another change 
-            //Person.GetPersons();
-            // Person.GetPersons("n");
-            // var persons = Person.GetPersons("n").GetAwaiter().GetResult();
-            var persons = Person.GetPersons_WithDataAdapter("Hillary").GetAwaiter().GetResult();
+            //Person.GetPersons_withDataAdapter();
+            // Person.GetPersons_withDataAdapter("name");
+             //var persons = Person.GetPersons_withDataAdapter("khan").GetAwaiter().GetResult();
+           // var persons = Person.GetPersons_WithDataAdapter("Hillary").GetAwaiter().GetResult();
 
             //Person.GetPersons();
-            // Person.GetPerson(2);
+           //  Person.GetPerson_withDataAdapter(1);
             // Employee.GetEmployees();
             //Employee.GetEmployee(1);
-            //  Person.Delete(1);
+             Person.DeletePerson_withDataAdapter(4);
             // Employee.DeleteEmployee(2);
             #region add person
-            /* Person newPerson = new Person();
+           /* Person newPerson = new Person();
              newPerson.Id = 3;
              newPerson.Firstname = "munna";
              newPerson.Lastname = "saleem";
