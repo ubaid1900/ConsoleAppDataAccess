@@ -18,7 +18,7 @@ namespace ConsoleAppDataAccess
            //  Person.GetPerson_withDataAdapter(1);
             // Employee.GetEmployees();
             //Employee.GetEmployee(1);
-             Person.DeletePerson_withDataAdapter(4);
+            // Person.DeletePerson_withDataAdapter(4);
             // Employee.DeleteEmployee(2);
             #region add person
            /* Person newPerson = new Person();
@@ -39,14 +39,14 @@ namespace ConsoleAppDataAccess
             } */
             #endregion
             #region update person
-            /*  Person newperson = new Person();
-              newperson.Id =2;
-              newperson.Firstname = "salman";
+              Person newperson = new Person();
+              newperson.Id =3;
+              newperson.Firstname = "ssss";
               newperson.Middlename = "mohd";
-              //newperson.Lastname = "khan";
-              //newperson.Phonenumber = 111;
+              newperson.Lastname = "khan";
+              newperson.Phonenumber = 111;
 
-              int addResult = Person.UpdatePerson(newperson, newperson.Id, true).GetAwaiter().GetResult();
+              int addResult = Person.UpdatePerson_withDataAdapter(newperson, newperson.Id, true).GetAwaiter().GetResult();
               if (addResult==1)
               {
                   Console.WriteLine("Preson updated");
@@ -55,7 +55,7 @@ namespace ConsoleAppDataAccess
               else
               {
                   Console.WriteLine("person not updated");
-              }*/
+              }
 
             #endregion
             #region add employee
@@ -79,7 +79,7 @@ namespace ConsoleAppDataAccess
 
             #region update Employee;
             //Employee employee = new Employee();
-            //employee.Id = 9;
+            //employee.Id = 3;
             //employee.Firstname = "salman";
             //employee.Middlename = "khan";
             //employee.Lastname = "khan";

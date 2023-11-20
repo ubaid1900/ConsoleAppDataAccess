@@ -281,7 +281,7 @@ namespace ConsoleAppDataAccess
             }
         }
 
-        public static async Task<int> UpdatePerson(Person person, int id, bool partialUpdate)
+        public static async Task<int> UpdatePerson_withDataAdapter(Person person, int id, bool partialUpdate)
         {
             using (SqlConnection sqlConnection = new SqlConnection(@"SERVER=.\SQLEXPRESS; INTEGRATED SECURITY= TRUE; DATABASE= TESTING1"))
             {
@@ -315,9 +315,30 @@ namespace ConsoleAppDataAccess
                 {
                     command = $"Update Person SET Firstname='{person.Firstname}', Middlename='{person.Middlename}', Lastname='{person.Lastname}', Phonenumber='{person.Phonenumber}' Where Id={id}";
                 }
-                SqlCommand sqlCommand = new SqlCommand(command, sqlConnection);
-                s = sqlCommand.ExecuteNonQuery();
-                sqlConnection.Close();
+                SqlDataAdapter sqlDataAdapter = new(command, sqlConnection);
+                DataSet ds = new();
+                sqlDataAdapter.Fill(ds);
+
+                // s = sqlCommand.ExecuteNonQuery();
+                // sqlConnection.Close();
+
+                if (ds.Tables.Count>0)
+                {
+                    foreach (DataRow row in ds.Tables[0].Rows)
+                    {
+                        Person p = new();
+
+                        p.Id = Convert.ToInt32(row["Id"]);
+                        p.Firstname = Convert.ToString(row["Firstname"]);
+                        p.Middlename = Convert.ToString(row["Middlename"]);
+                        p.Lastname = Convert.ToString(row["Lastname"]);
+                        p.Phonenumber = Convert.ToInt32(row["Phonenumber"]);
+
+                        Console.WriteLine("{},{},{},{},{}", p.Id, p.Firstname, p.Middlename, p.Lastname);
+
+                    }
+                }
+
                 return s;
 
             }
