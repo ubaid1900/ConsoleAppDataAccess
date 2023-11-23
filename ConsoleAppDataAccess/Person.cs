@@ -167,7 +167,7 @@ namespace ConsoleAppDataAccess
 
         public static Person GetPerson(int id)
         {
-            using (SqlConnection sqlConnection = new SqlConnection(@"Server =.\SQLEXPRESS; Integrated Security=true; Database=TESTING1;"))
+            using (SqlConnection sqlConnection = new SqlConnection(@"Server =.\SQLEXPRESS; Integrated Security=TRUE; Database=TESTING1;"))
             {
 
                 sqlConnection.Open();
