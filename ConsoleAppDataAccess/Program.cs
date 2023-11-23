@@ -9,53 +9,53 @@ namespace ConsoleAppDataAccess
         {
 
             // Another change 
-            //Person.GetPersons();
-            // Person.GetPersons("n");
-            // var persons = Person.GetPersons("n").GetAwaiter().GetResult();
-            var persons = Person.GetPersons_WithDataAdapter("Hillary").GetAwaiter().GetResult();
+            // Person.GetPersons("munna");
+            var persons= Person_withSqlAdapters.GetPersons_withDataAdapter("munna").GetAwaiter().GetResult();
+            // var persons = Person.GetPersons("munna").GetAwaiter().GetResult();
+           // var persons = Person.GetPersons_WithDataAdapter("munna").GetAwaiter().GetResult();
 
-            //Person.GetPersons();
-            // Person.GetPerson(2);
+            // Person_withSqlAdapters.GetPersons_withDataAdapter();
+            // Person_withSqlAdapters.GetPerson_withDataAdapter(2);
             // Employee.GetEmployees();
             //Employee.GetEmployee(1);
-            //  Person.Delete(1);
+            //Person_withSqlAdapters.DeletePerson_withDataAdapter(1);
             // Employee.DeleteEmployee(2);
             #region add person
-            /* Person newPerson = new Person();
-             newPerson.Id = 3;
-             newPerson.Firstname = "munna";
-             newPerson.Lastname = "saleem";
-             newPerson.Middlename = "kaleem";
-             //newPerson.DateofBirth = DateTime.Now.AddYears(-20);
-             newPerson.Phonenumber = 147258369;
-             int addResult = Person.AddPerson(newPerson);
-             if (addResult == 1)
-                 {
-                 Console.WriteLine("new person added");
-             }
-             else
-             {
-                Console.WriteLine("failure adding a new person");
-            } */
+            //Person newPerson = new Person();
+            //newPerson.Id = 4;
+            //newPerson.Firstname = "faheem";
+            //newPerson.Lastname = "saleem";
+            //newPerson.Middlename = "kaleem";
+            ////newPerson.DateofBirth = DateTime.Now.AddYears(-20);
+            //newPerson.Phonenumber = 147258369;
+            //int addResult = Person_withSqlAdapters.AddPerson_withDataAdapter(newPerson);
+            //if (addResult == 1)
+            //{
+            //    Console.WriteLine("new person added");
+            //}
+            //else
+            //{
+            //    Console.WriteLine("failure adding a new person");
+            //}
             #endregion
             #region update person
-            /*  Person newperson = new Person();
-              newperson.Id =2;
-              newperson.Firstname = "salman";
-              newperson.Middlename = "mohd";
-              //newperson.Lastname = "khan";
-              //newperson.Phonenumber = 111;
+            //Person newperson = new Person();
+            //newperson.Id = 2;
+            //newperson.Firstname = "pasha";
+            //newperson.Middlename = "mohd";
+            //newperson.Lastname = "khan";
+            //newperson.Phonenumber = 111;
 
-              int addResult = Person.UpdatePerson(newperson, newperson.Id, true).GetAwaiter().GetResult();
-              if (addResult==1)
-              {
-                  Console.WriteLine("Preson updated");
+            //int addResult = Person.UpdatePerson(newperson, newperson.Id, false).GetAwaiter().GetResult();
+            //if (addResult == 1)
+            //{
+            //    Console.WriteLine("Preson updated");
 
-              }
-              else
-              {
-                  Console.WriteLine("person not updated");
-              }*/
+            //}
+            //else
+            //{
+            //    Console.WriteLine("person not updated");
+            //}
 
             #endregion
             #region add employee
@@ -94,7 +94,7 @@ namespace ConsoleAppDataAccess
             //{
             //    Console.WriteLine("Failure to Update employee");
             //}
-           
+
             #endregion
 
 
