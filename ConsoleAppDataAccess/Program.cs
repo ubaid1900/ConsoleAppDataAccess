@@ -10,9 +10,9 @@ namespace ConsoleAppDataAccess
 
             // Another change 
             // Person.GetPersons("munna");
-            var persons= Person_withSqlAdapters.GetPersons_withDataAdapter("munna").GetAwaiter().GetResult();
+            //var persons= Person_withSqlAdapters.GetPersons_withDataAdapter("munna").GetAwaiter().GetResult();
             // var persons = Person.GetPersons("munna").GetAwaiter().GetResult();
-           // var persons = Person.GetPersons_WithDataAdapter("munna").GetAwaiter().GetResult();
+            var persons = Person.GetPersons_WithDataAdapter("Hillary").GetAwaiter().GetResult();
 
             // Person_withSqlAdapters.GetPersons_withDataAdapter();
             // Person_withSqlAdapters.GetPerson_withDataAdapter(2);
@@ -98,6 +98,10 @@ namespace ConsoleAppDataAccess
             #endregion
 
 
+            #region SQL Injection
+            //var personsSQLInjection = Person.GetPersons("Hillary ''' delete from person2;--").GetAwaiter().GetResult();
+
+            #endregion
         }
     }
 

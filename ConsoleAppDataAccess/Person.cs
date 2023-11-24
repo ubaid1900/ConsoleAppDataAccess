@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using ConsoleAppDataAccess.Common;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Data.SqlTypes;
@@ -91,10 +92,13 @@ namespace ConsoleAppDataAccess
         }
         public async static Task<List<Person>> GetPersons(string name)
         {
-            //SqlConnection sqlConnection = new SqlConnection(@"Server =.\SQLExpress; Integrated Security=true; Database=TESTING1;");
-            //using SqlConnection sqlConnection = new SqlConnection(@"Server =.\SQLExpress; Integrated Security=true; Database=TESTING1;");
-
-            List<Person> list = new List<Person>();
+            foreach (string item in Constants.BlackList)
+            {
+                if (name.ToLower().Contains(item.ToLower()))
+                {
+                    throw new ArgumentException("Invalid value for name");
+                }
+            }            List<Person> list = new List<Person>();
             using (SqlConnection sqlConnection = new SqlConnection(@"Server =.\SQLEXPRESS; Integrated Security=true; Database=TESTING1;"))
             {
 
@@ -125,16 +129,25 @@ namespace ConsoleAppDataAccess
             }
             return list;
         }
-        public async static Task<List<Person>> GetPersons_WithDataAdapter(string name)
+        public async static Task<List<Person>> GetPersons_WithDataAdapter(string firstname)
         {
+            foreach (string item in Constants.BlackList)
+            {
+                if (firstname.ToLower().Contains(item.ToLower()))
+                {
+                    throw new ArgumentException($"Invalid value for {nameof(firstname)}");
+                }
+            }
             List<Person> list = new List<Person>();
             using (SqlConnection sqlConnection = new SqlConnection(@"Server =.\SQLEXPRESS; Integrated Security=true; Database=TESTING1;"))
             {
                 await sqlConnection.OpenAsync();
 
-                string cmdText = $"select Id, Firstname as fn,Middlename, lastname,Phonenumber from Person where firstname = '{name}'";
+                string cmdText = $"select Id, Firstname as fn,Middlename, lastname,Phonenumber from Person where firstname = '{firstname}'";
+                SqlCommand command = new(cmdText, sqlConnection);
+                SqlDataAdapter sqlDataAdapter = new();
+                sqlDataAdapter.SelectCommand = command;
 
-                SqlDataAdapter sqlDataAdapter = new(cmdText, sqlConnection);
                 DataSet ds = new();
                 sqlDataAdapter.Fill(ds);
 
