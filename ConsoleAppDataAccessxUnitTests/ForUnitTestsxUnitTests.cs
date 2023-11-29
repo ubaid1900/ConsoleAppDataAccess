@@ -16,9 +16,10 @@ namespace ConsoleAppDataAccessxUnitTests
             // Arrange
 
             // Act
-            int r = ForUnitTests.Operation(n1, n2, operation);
+            int actual = ForUnitTests.Operation(n1, n2, operation);
             // Assert
-            Assert.Equal(expected, r);
+            //Assert.Equal(expected, r);
+            expected.Should().Be(actual);
         }
     }
 }

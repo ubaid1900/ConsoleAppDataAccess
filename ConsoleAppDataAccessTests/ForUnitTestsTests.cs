@@ -1,10 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ConsoleAppDataAccess;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using FluentAssertions;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ConsoleAppDataAccess.Tests
 {
@@ -23,7 +18,8 @@ namespace ConsoleAppDataAccess.Tests
             // Act
             int actual = ForUnitTests.Operation(n1, n2, operation);
             // Assert
-            Assert.AreEqual(expected, actual);
+            //Assert.AreEqual(expected, actual);
+            expected.Should().Be(actual);
         }
 
         //[TestMethod()]
